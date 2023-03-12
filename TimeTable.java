@@ -16,3 +16,5 @@ class TimeTable {
         int dayIndex = getDayIndex(day);
         schedule[dayIndex][hour - 1] = null;
     }
+    
+//     default 
