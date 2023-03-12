@@ -17,4 +17,4 @@ class TimeTable {
         schedule[dayIndex][hour - 1] = null;
     }
     
-//     default 
+//     default code 
