@@ -16,3 +16,23 @@ class TimeTable {
         int dayIndex = getDayIndex(day);
         schedule[dayIndex][hour - 1] = null;
     }
+    
+    public void display() {
+        System.out.println("Time Table");
+        System.out.println("-----------");
+        System.out.println("Day\t\t1\t2\t3\t4\t5\t6\t7\t8");
+        System.out.println("-----------");
+        String[] days = { "Monday\t", "Tuesday\t", "Wednesday", "Thursday", "Friday\t" };
+        for (int i = 0; i < days.length; i++) {
+            System.out.print(days[i] + "\t");
+            for (int j = 0; j < 8; j++) {
+                if (schedule[i][j] != null) {
+                    System.out.print(schedule[i][j]);
+                } else {
+                    System.out.print("-");
+                }
+                System.out.print("\t");
+            }
+            System.out.println();
+        }
+    }
