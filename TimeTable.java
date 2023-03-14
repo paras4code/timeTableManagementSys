@@ -36,3 +36,26 @@ class TimeTable {
             System.out.println();
         }
     }
+    
+        private int getDayIndex(String day) {
+        int index = -1;
+        switch (day) {
+            case "Monday":
+                index = 0;
+                break;
+            case "Tuesday":
+                index = 1;
+                break;
+            case "Wednesday":
+                index = 2;
+                break;
+            case "Thursday":
+                index = 3;
+                break;
+            case "Friday":
+                index = 4;
+                break;
+        }
+        return index;
+    }
+}
