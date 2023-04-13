@@ -16,7 +16,7 @@ class TimeTable {
         int dayIndex = getDayIndex(day);
         schedule[dayIndex][hour - 1] = null;
     }
-    
+
     public void display() {
         System.out.println("Time Table");
         System.out.println("-----------");
@@ -36,8 +36,8 @@ class TimeTable {
             System.out.println();
         }
     }
-    
-        private int getDayIndex(String day) {
+
+    private int getDayIndex(String day) {
         int index = -1;
         switch (day) {
             case "Monday":
@@ -60,3 +60,52 @@ class TimeTable {
     }
 }
 
+public class TimeTableManagementSystem {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        TimeTable table = new TimeTable();
+        String choice = "";
+
+        while (!choice.equals("4")) {
+            System.out.println("Time Table Management System");
+            System.out.println("----------------------------");
+            System.out.println("1. Add Class");
+            System.out.println("2. Remove Class");
+            System.out.println("3. Display Time Table");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            choice = input.nextLine();
+
+            switch (choice) {
+                case "1":
+                    System.out.print("Enter class name: ");
+                    String className = input.nextLine();
+                    System.out.print("Enter day (Monday-Friday): ");
+                    String day = input.nextLine();
+                    System.out.print("Enter hour (1-8): ");
+                    int hour = Integer.parseInt(input.nextLine());
+                    table.addClass(className, day, hour);
+                    System.out.println("Class added successfully!");
+                    break;
+                case "2":
+                    System.out.print("Enter day (Monday-Friday): ");
+                    day = input.nextLine();
+                    System.out.print("Enter hour (1-8): ");
+                    hour = Integer.parseInt(input.nextLine());
+                    table.removeClass(day, hour);
+                    System.out.println("Class removed successfully!");
+                    break;
+                case "3":
+                    table.display();
+                    break;
+                case "4":
+                    System.out.println("Thank you for using Time Table Management System!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+            System.out.println();
+        }
+    }
+}
