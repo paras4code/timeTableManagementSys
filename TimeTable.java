@@ -7,13 +7,19 @@ class TimeTable {
         schedule = new String[5][8];
     }
 
-    public void addClass(String className, String day, int hour) {
+    public void addClass(String className, String day, int hour) throws IllegalArgumentException {
         int dayIndex = getDayIndex(day);
+        if (dayIndex == -1 || hour < 1 || hour > 8) {
+            throw new IllegalArgumentException("Invalid day or hour");
+        }
         schedule[dayIndex][hour - 1] = className;
     }
 
-    public void removeClass(String day, int hour) {
+    public void removeClass(String day, int hour) throws IllegalArgumentException {
         int dayIndex = getDayIndex(day);
+        if (dayIndex == -1 || hour < 1 || hour > 8) {
+            throw new IllegalArgumentException("Invalid day or hour");
+        }
         schedule[dayIndex][hour - 1] = null;
     }
 
@@ -62,7 +68,7 @@ class TimeTable {
 
 public class TimeTableManagementSystem {
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         TimeTable table = new TimeTable();
         String choice = "";
 
@@ -74,26 +80,36 @@ public class TimeTableManagementSystem {
             System.out.println("3. Display Time Table");
             System.out.println("4. Exit");
             System.out.print("Enter your choice: ");
-            choice = input.nextLine();
+            choice = sc.nextLine();
 
             switch (choice) {
                 case "1":
-                    System.out.print("Enter class name: ");
-                    String className = input.nextLine();
-                    System.out.print("Enter day (Monday-Friday): ");
-                    String day = input.nextLine();
-                    System.out.print("Enter hour (1-8): ");
-                    int hour = Integer.parseInt(input.nextLine());
-                    table.addClass(className, day, hour);
-                    System.out.println("Class added successfully!");
+                    try {
+                        System.out.print("Enter class name: ");
+                        String className = sc.nextLine();
+                        System.out.print("Enter day (Monday-Friday): ");
+                        String day = sc.nextLine();
+                        System.out.print("Enter hour (1-8): ");
+                        int hour = Integer.parseInt(sc.nextLine());
+                        table.addClass(className, day, hour);
+                        System.out.println("Class added successfully!");
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case "2":
-                    System.out.print("Enter day (Monday-Friday): ");
-                    day = input.nextLine();
-                    System.out.print("Enter hour (1-8): ");
-                    hour = Integer.parseInt(input.nextLine());
-                    table.removeClass(day, hour);
-                    System.out.println("Class removed successfully!");
+                    try {
+                        System.out.print("Enter day (Monday-Friday): ");
+                        String day = sc.nextLine();
+                        System.out.print("Enter hour (1-8): ");
+                        int hour = Integer.parseInt(sc.nextLine());
+                        table.removeClass(day, hour);
+                        System.out.println("Class removed successfully!");
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println("Invalid input. Please enter a valid day (Monday-Friday) and hour (1-8).");
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a valid hour (1-8).");
+                    }
                     break;
                 case "3":
                     table.display();
@@ -109,4 +125,3 @@ public class TimeTableManagementSystem {
         }
     }
 }
-
