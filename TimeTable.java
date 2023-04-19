@@ -1,9 +1,10 @@
+import java.io.*;
 import java.util.*;
 
-class TimeTable {
+class MySchedule {
     private String[][] schedule;
 
-    public TimeTable() {
+    public MySchedule() {
         schedule = new String[5][8];
     }
 
@@ -15,7 +16,7 @@ class TimeTable {
         schedule[dayIndex][hour - 1] = className;
     }
 
-    public void removeClass(String day, int hour) throws IllegalArgumentException {
+    public void removeClass(String day, int hour) throws IllegalArgumentException{
         int dayIndex = getDayIndex(day);
         if (dayIndex == -1 || hour < 1 || hour > 8) {
             throw new IllegalArgumentException("Invalid day or hour");
@@ -40,6 +41,43 @@ class TimeTable {
                 System.out.print("\t");
             }
             System.out.println();
+        }
+    }
+
+    public void saveToFile(String fileName, String classname, String day, int hour) {
+        try {
+
+            FileWriter writer = new FileWriter(fileName);
+            writer.write("\n");
+            writer.write("Subject Name - " + classname + " | day - " + day + "| hour - " + hour);
+            writer.close();
+            System.out.println("Time table saved to file " + fileName);
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing to file.");
+            e.printStackTrace();
+        }
+    }
+
+    public void loadFromFile(String fileName) {
+        try {
+            FileReader reader = new FileReader(fileName);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            String line;
+            int row = 0;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] classes = line.split(",");
+                for (int i = 0; i < classes.length; i++) {
+                    if (!classes[i].equals("")) {
+                        schedule[row][i] = classes[i];
+                    }
+                }
+                row++;
+            }
+            reader.close();
+            System.out.println("Time table loaded from file " + fileName);
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading from file.");
+            e.printStackTrace();
         }
     }
 
@@ -68,9 +106,13 @@ class TimeTable {
 
 public class TimeTableManagementSystem {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        TimeTable table = new TimeTable();
+        Scanner input = new Scanner(System.in);
+        MySchedule table = new MySchedule();
         String choice = "";
+        String filename = "schedule.txt";
+        String className = "";
+        String day = "";
+        int hour = 0;
 
         while (!choice.equals("4")) {
             System.out.println("Time Table Management System");
@@ -80,36 +122,38 @@ public class TimeTableManagementSystem {
             System.out.println("3. Display Time Table");
             System.out.println("4. Exit");
             System.out.print("Enter your choice: ");
-            choice = sc.nextLine();
+            choice = input.nextLine();
 
             switch (choice) {
                 case "1":
-                    try {
-                        System.out.print("Enter class name: ");
-                        String className = sc.nextLine();
-                        System.out.print("Enter day (Monday-Friday): ");
-                        String day = sc.nextLine();
-                        System.out.print("Enter hour (1-8): ");
-                        int hour = Integer.parseInt(sc.nextLine());
-                        table.addClass(className, day, hour);
-                        System.out.println("Class added successfully!");
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(e.getMessage());
-                    }
+                try{
+                    System.out.print("Enter class name: ");
+                    className = input.nextLine();
+                    System.out.print("Enter day (Monday-Friday): ");
+                    day = input.nextLine();
+                    System.out.print("Enter hour (1-8): ");
+                    hour = Integer.parseInt(input.nextLine());
+                    table.addClass(className, day, hour);
+                    System.out.println("Class added successfully!");
+                }
+                catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                }
                     break;
                 case "2":
-                    try {
-                        System.out.print("Enter day (Monday-Friday): ");
-                        String day = sc.nextLine();
-                        System.out.print("Enter hour (1-8): ");
-                        int hour = Integer.parseInt(sc.nextLine());
-                        table.removeClass(day, hour);
-                        System.out.println("Class removed successfully!");
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        System.out.println("Invalid input. Please enter a valid day (Monday-Friday) and hour (1-8).");
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid input. Please enter a valid hour (1-8).");
-                    }
+                try
+                {
+                    System.out.print("Enter day (Monday-Friday): ");
+                    day = input.nextLine();
+                    System.out.print("Enter hour (1-8): ");
+                    hour = Integer.parseInt(input.nextLine());
+                    table.removeClass(day, hour);
+                    System.out.println("Class removed successfully!");
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("Invalid input. Please enter a valid day (Monday-Friday) and hour (1-8).");
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a valid hour (1-8).");
+                }
                     break;
                 case "3":
                     table.display();
@@ -121,7 +165,14 @@ public class TimeTableManagementSystem {
                     System.out.println("Invalid choice. Please try again.");
                     break;
             }
+
+            // Save changes to file after each operation
+            table.saveToFile(filename, className, day, hour);
+
             System.out.println();
         }
+
+        // Close input scanner
+        input.close();
     }
 }
